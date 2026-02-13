@@ -34,7 +34,7 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 # On crée un petit script de démarrage
-RUN echo 'php artisan migrate:fresh --force && apache2-foreground' > /usr/local/bin/start.sh
+RUN echo 'php artisan migrate:fresh --seed --force && apache2-foreground' > /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
 EXPOSE 80

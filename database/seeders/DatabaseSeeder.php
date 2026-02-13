@@ -22,6 +22,9 @@ class DatabaseSeeder extends Seeder
             \App\Models\Category::create(['name' => $cat]);
         }
 
-        echo "Categories créées avec succès ! \n";
+        // 2. APPEL DE TON ADMIN (Crucial !)
+        $this->call(AdminUserSeeder::class);
+
+        echo "Categories et Admin et Gestion créés avec succès ! \n";
     }
 }
