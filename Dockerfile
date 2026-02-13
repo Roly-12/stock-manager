@@ -15,6 +15,9 @@ RUN apt-get update && apt-get install -y \
 # Installation des extensions PHP
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl
 
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
 # Activation du module Rewrite
 RUN a2enmod rewrite
 
@@ -26,6 +29,7 @@ COPY . .
 
 # LE SECRET : On ajoute --ignore-platform-reqs pour forcer l'installation
 RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platform-reqs
+
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
@@ -40,6 +44,9 @@ RUN mkdir -p storage/framework/sessions \
     mkdir -p storage/framework/views \
     mkdir -p storage/framework/cache \
     mkdir -p bootstrap/cache
+
+RUN npm install
+RUN npm run build
 
 # FIX DES PERMISSIONS (Crucial pour l'erreur 500)
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
