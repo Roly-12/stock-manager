@@ -2,5 +2,8 @@ services:
   - type: web
     name: stock-manager
     runtime: php
+    envVars:
+      - key: PHP_VERSION
+        value: 8.2
     buildCommand: composer install --no-dev && npm install && npm run build
     startCommand: php artisan serve --host 0.0.0.0 --port $PORT
