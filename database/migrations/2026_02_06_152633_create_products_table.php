@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
@@ -16,22 +13,19 @@ return new class extends Migration
             $table->string('name');
             $table->string('sku')->unique();
             $table->foreignId('category_id')->constrained();
-            $table->integer('quantity')->default(0); // <--- VÉRIFIE CETTE LIGNE
+            $table->integer('quantity')->default(0);
             $table->integer('min_stock')->default(5);
             $table->decimal('price', 10, 2);
             $table->text('description')->nullable();
-            if (!Schema::hasColumn('products', 'lead_time_days')) {
-                Schema::table('products', function (Blueprint $table) {
-                    $table->integer('lead_time_days')->default(7);
-                });
-            } // Délai moyen pour recevoir le produit
-            $table->integer('safety_stock')->default(5); // Stock de réserve intouchable
+            
+            // On insère la colonne directement ici, sans IF
+            $table->integer('lead_time_days')->default(7); 
+            $table->integer('safety_stock')->default(5); 
+            
             $table->timestamps();
         });
     }
-    /**
-     * Reverse the migrations.
-     */
+
     public function down(): void
     {
         Schema::dropIfExists('products');
