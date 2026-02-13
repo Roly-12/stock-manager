@@ -27,7 +27,7 @@ class AdminUserSeeder extends Seeder
             [
                 'name' => 'Gestionnaire Stock',
                 'password' => Hash::make('Gestion1234!'),
-                'role' => 'manager', // ou 'gestionnaire' selon ton code
+                'role' => 'gestionnaire', // ou 'gestionnaire' selon ton code
                 'email_verified_at' => now(),
             ]
         );
