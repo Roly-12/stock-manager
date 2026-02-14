@@ -1,20 +1,24 @@
 FROM php:8.3-apache
 
-# Installation des dépendances système
+# Installation des dépendances système (avec celles pour Excel/Images)
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
     libzip-dev \
     libicu-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
     zip \
     unzip \
     git \
     curl
 
-# Installation des extensions PHP
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl
+# Configuration de l'extension GD (nécessaire pour les formats Excel)
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl
 
+# Augmenter la mémoire pour les gros fichiers Excel
 RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini
 
 # Installation de Node.js v22
@@ -32,6 +36,9 @@ COPY . .
 
 # Installation des dépendances PHP
 RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platform-reqs
+
+RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/framework/laravel-excel
+RUN chown -R www-data:www-data /var/www/html/storage
 
 # --- LE FIX POUR LE NOT FOUND (404) ---
 RUN echo "<VirtualHost *:80>\n\
